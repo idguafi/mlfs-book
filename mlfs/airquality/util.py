@@ -185,6 +185,15 @@ def get_pm25(aqicn_url: str, country: str, city: str, street: str, day: datetime
 def plot_air_quality_forecast(city: str, street: str, df: pd.DataFrame, file_path: str, hindcast=False):
     fig, ax = plt.subplots(figsize=(10, 6))
 
+    # Handle empty dataframe
+    if len(df) == 0 or 'date' not in df.columns:
+        ax.text(0.5, 0.5, 'No data available yet.\nRun this notebook daily to collect hindcast data.', 
+                ha='center', va='center', transform=ax.transAxes, fontsize=12)
+        ax.set_title(f"PM2.5 {'Hindcast' if hindcast else 'Forecast'} for {city}, {street}")
+        plt.tight_layout()
+        plt.savefig(file_path)
+        return plt
+    
     day = pd.to_datetime(df['date']).dt.date
     # Plot each column separately in matplotlib
     ax.plot(day, df['predicted_pm25'], label='Predicted PM2.5', color='red', linewidth=2, marker='o', markersize=5, markerfacecolor='blue')
@@ -291,10 +300,51 @@ def backfill_predictions_for_monitoring(weather_fg, air_quality_df, monitor_fg, 
     features_df = weather_fg.read()
     features_df = features_df.sort_values(by=['date'], ascending=True)
     features_df = features_df.tail(10)
-    features_df['predicted_pm25'] = model.predict(features_df[['temperature_2m_mean', 'precipitation_sum', 'wind_speed_10m_max', 'wind_direction_10m_dominant']])
-    df = pd.merge(features_df, air_quality_df[['date','pm25','street','country']], on="date")
+    
+    # Check if air_quality_df already has lagged features (from v2 feature group)
+    has_lagged_features = all(col in air_quality_df.columns for col in ['pm_25_1_day_lag', 'pm_25_2_day_lag', 'pm_25_3_day_lag'])
+    
+    if has_lagged_features:
+        # Use existing lagged features from the feature group
+        aq_with_lags = air_quality_df[['date', 'pm25', 'pm_25_1_day_lag', 'pm_25_2_day_lag', 'pm_25_3_day_lag', 'street', 'country']].copy()
+    else:
+        # Calculate lagged features if not present
+        aq_sorted = air_quality_df.sort_values(by=['date']).copy()
+        aq_sorted['pm_25_1_day_lag'] = aq_sorted['pm25'].shift(1)
+        aq_sorted['pm_25_2_day_lag'] = aq_sorted['pm25'].shift(2)
+        aq_sorted['pm_25_3_day_lag'] = aq_sorted['pm25'].shift(3)
+        aq_with_lags = aq_sorted[['date', 'pm25', 'pm_25_1_day_lag', 'pm_25_2_day_lag', 'pm_25_3_day_lag', 'street', 'country']].copy()
+    
+    # Merge weather with air quality (including lagged features)
+    features_df = pd.merge(
+        features_df, 
+        aq_with_lags, 
+        on='date', 
+        how='inner'  # Only keep dates that exist in both datasets
+    )
+    
+    # Drop rows with NaN lagged features (shouldn't happen with inner join, but safety check)
+    features_df = features_df.dropna(subset=['pm_25_1_day_lag', 'pm_25_2_day_lag', 'pm_25_3_day_lag'])
+    
+    if len(features_df) == 0:
+        print("⚠️ Warning: No matching dates found between weather and air quality data with complete lagged features")
+        return pd.DataFrame()  # Return empty dataframe
+    
+    # Make predictions with correct feature order: lagged features first, then weather
+    feature_columns = [
+        'pm_25_1_day_lag', 'pm_25_2_day_lag', 'pm_25_3_day_lag',
+        'temperature_2m_mean', 'precipitation_sum', 'wind_speed_10m_max', 'wind_direction_10m_dominant'
+    ]
+    features_df['predicted_pm25'] = model.predict(features_df[feature_columns])
+    
+    # Prepare for insertion
+    df = features_df.copy()
     df['days_before_forecast_day'] = 1
-    hindcast_df = df
-    df = df.drop('pm25', axis=1)
+    hindcast_df = df[['date', 'predicted_pm25', 'pm25']].copy()
+    
+    # Drop pm25 and pm_25 lag columns before inserting to monitor_fg
+    cols_to_drop = ['pm25', 'pm_25_1_day_lag', 'pm_25_2_day_lag', 'pm_25_3_day_lag']
+    df = df.drop(columns=[col for col in cols_to_drop if col in df.columns])
+    
     monitor_fg.insert(df, write_options={"wait_for_job": True})
     return hindcast_df
