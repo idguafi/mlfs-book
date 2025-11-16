@@ -297,7 +297,18 @@ def check_file_path(file_path):
         print(f"File successfully found at the path: {file_path}")
 
 def backfill_predictions_for_monitoring(weather_fg, air_quality_df, monitor_fg, model):
-    features_df = weather_fg.read()
+    # Get city and street from the air_quality_df to filter weather data
+    if len(air_quality_df) == 0:
+        print("⚠️ Warning: No air quality data provided for backfill")
+        return pd.DataFrame()
+    
+    city = air_quality_df['city'].iloc[0]
+    street = air_quality_df['street'].iloc[0]
+    
+    # Filter weather data for this specific sensor location
+    features_df = weather_fg.filter(
+        (weather_fg.city == city)
+    ).read()
     features_df = features_df.sort_values(by=['date'], ascending=True)
     features_df = features_df.tail(10)
     
@@ -327,7 +338,7 @@ def backfill_predictions_for_monitoring(weather_fg, air_quality_df, monitor_fg, 
     features_df = features_df.dropna(subset=['pm_25_1_day_lag', 'pm_25_2_day_lag', 'pm_25_3_day_lag'])
     
     if len(features_df) == 0:
-        print("⚠️ Warning: No matching dates found between weather and air quality data with complete lagged features")
+        print("Warning: No matching dates found between weather and air quality data with complete lagged features")
         return pd.DataFrame()  # Return empty dataframe
     
     # Make predictions with correct feature order: lagged features first, then weather
