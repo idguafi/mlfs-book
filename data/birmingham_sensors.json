@@ -1,0 +1,30 @@
+[
+    {
+        "country": "United Kingdom",
+        "city": "Birmingham",
+        "street": "Birmingham A4540 Roadside",
+        "aqicn_url": "https://api.waqi.info/feed/@10101/",
+        "latitude":"52.476145",
+        "longitude":"-1.874978",
+        "csv_file":"birmingham-a4540-roadside-air-quality.csv"
+    },
+    {
+        "country": "United Kingdom",
+        "city": "Birmingham",
+        "street": "Birmingham Ladywood",
+        "aqicn_url": "https://api.waqi.info/feed/@11652/",
+        "latitude":"52.481346",
+        "longitude":"-1.918235",
+        "csv_file":"birmingham-ladywood-air-quality.csv"
+    },
+    {
+        "country": "United Kingdom",
+        "city": "Birmingham",
+        "street": "Coventry Allesley",
+        "aqicn_url": "https://api.waqi.info/feed/@8913/",
+        "latitude":"52.411628",
+        "longitude":"-1.560189",
+        "csv_file":"coventry-allesley-air-quality.csv"
+    }
+
+]
