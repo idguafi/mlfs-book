@@ -12,7 +12,7 @@ Notebook 1: Mainly takes care of feature engineering, data cleaning, and creates
 
 Notebook 2: This notebook - as its name describes - is the daily feature pipeline that downloads and ingests new data into our feature store(s) every day. The new weather data is then used in inference later on.  Lagged features are computed when pm25 is fetched and is later used as well. 
 
-Notebook 3: Here we train and evaluate our model(s) and deploy them to hopsworks. This makes use of the backfilled data from NB1. 
+Notebook 3: Here we train and evaluate our model(s) and deploy them to hopsworks. This makes use of the backfilled data from NB1. Worth noting that in the A-level version of this lab, we train one 'expert' model per sensor in the city of birmingham, which is then used to make forcasts for each sensor in notebook 4. 
 
 Notebook 4: This is another daily notebook that is used in the Actions. This notebook will make use of our features and data provided from the previous steps to make predictions/forecasts about the air quality. This is then plotted, saved, and displayed in our github page (link above).
 
