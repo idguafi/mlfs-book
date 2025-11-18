@@ -299,7 +299,7 @@ def check_file_path(file_path):
 def backfill_predictions_for_monitoring(weather_fg, air_quality_df, monitor_fg, model):
     # Get city and street from the air_quality_df to filter weather data
     if len(air_quality_df) == 0:
-        print("⚠️ Warning: No air quality data provided for backfill")
+        print("Warning: No air quality data provided for backfill")
         return pd.DataFrame()
     
     city = air_quality_df['city'].iloc[0]
@@ -356,6 +356,11 @@ def backfill_predictions_for_monitoring(weather_fg, air_quality_df, monitor_fg, 
     # Drop only pm25 before inserting to monitor_fg (keep lagged features)
     if 'pm25' in df.columns:
         df = df.drop(columns=['pm25'])
+    
+    # Convert lagged features to float64 (double) to match schema
+    df['pm_25_1_day_lag'] = df['pm_25_1_day_lag'].astype('float64')
+    df['pm_25_2_day_lag'] = df['pm_25_2_day_lag'].astype('float64')
+    df['pm_25_3_day_lag'] = df['pm_25_3_day_lag'].astype('float64')
     
     monitor_fg.insert(df, write_options={"wait_for_job": True})
     return hindcast_df
