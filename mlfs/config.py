@@ -83,26 +83,12 @@ class HopsworksSettings(BaseSettings):
         api_key = self.HOPSWORKS_API_KEY or os.getenv("HOPSWORKS_API_KEY")
         if not api_key or (isinstance(api_key, str) and not api_key.strip()):
             missing.append("HOPSWORKS_API_KEY")
-        # 2. AQICN_API_KEY
+        
+        # Note: AQICN fields are now optional - can use JSON configs (SENSOR_LOCATION_JSON, BIRMINGHAM_SENSOR_LOCATIONS) instead
+        # Only validate AQICN_API_KEY as it's still needed
         aqicn_api_key = self.AQICN_API_KEY or os.getenv("AQICN_API_KEY")
         if not aqicn_api_key or (isinstance(aqicn_api_key, str) and not aqicn_api_key.strip()):
             missing.append("AQICN_API_KEY")
-        # 3. AQICN_COUNTRY
-        aqicn_country = self.AQICN_COUNTRY or os.getenv("AQICN_COUNTRY")
-        if not aqicn_country or not aqicn_country.strip():
-            missing.append("AQICN_COUNTRY")
-        # 4. AQICN_CITY
-        aqicn_city = self.AQICN_CITY or os.getenv("AQICN_CITY")
-        if not aqicn_city or not aqicn_city.strip():
-            missing.append("AQICN_CITY")
-        # 5. AQICN_STREET
-        aqicn_street = self.AQICN_STREET or os.getenv("AQICN_STREET")
-        if not aqicn_street or not aqicn_street.strip():
-            missing.append("AQICN_STREET")
-        # 6. AQICN_URL
-        aqicn_url = self.AQICN_URL or os.getenv("AQICN_URL")
-        if not aqicn_url or not aqicn_url.strip():
-            missing.append("AQICN_URL")
 
         if missing:
             raise ValueError(
