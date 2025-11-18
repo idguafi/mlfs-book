@@ -1,0 +1,84 @@
+<style>
+.sensor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: 30px;
+    margin: 30px 0;
+}
+
+.sensor-card {
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+.sensor-card h3 {
+    margin-top: 0;
+    color: #333;
+    border-bottom: 2px solid #1EB182;
+    padding-bottom: 10px;
+}
+
+.sensor-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+
+.forecast-section, .hindcast-section {
+    margin-bottom: 40px;
+}
+
+.section-title {
+    font-size: 1.8em;
+    color: #1EB182;
+    margin-bottom: 20px;
+    border-bottom: 3px solid #1EB182;
+    padding-bottom: 10px;
+}
+</style>
+
+<div class="forecast-section">
+    <h2 class="section-title">7-Day PM2.5 Forecasts</h2>
+    <div class="sensor-grid">
+        <div class="sensor-card">
+            <h3>Paris, Rue de Belfort</h3>
+            <img src="./assets/img/pm25_forecast_paris_rue_de_belfort.png" alt="Paris PM2.5 Forecast">
+        </div>
+        <div class="sensor-card">
+            <h3>Birmingham, A4540 Roadside</h3>
+            <img src="./assets/img/pm25_forecast_birmingham_a4540_roadside.png" alt="Birmingham A4540 PM2.5 Forecast">
+        </div>
+        <div class="sensor-card">
+            <h3>Birmingham, Ladywood</h3>
+            <img src="./assets/img/pm25_forecast_birmingham_ladywood.png" alt="Birmingham Ladywood PM2.5 Forecast">
+        </div>
+        <div class="sensor-card">
+            <h3>Coventry, Allesley</h3>
+            <img src="./assets/img/pm25_forecast_coventry_allesley.png" alt="Coventry Allesley PM2.5 Forecast">
+        </div>
+    </div>
+</div>
+
+<div class="hindcast-section">
+    <h2 class="section-title">1-Day Hindcasts: Predictions vs Actual</h2>
+    <div class="sensor-grid">
+        <div class="sensor-card">
+            <h3>Paris, Rue de Belfort</h3>
+            <img src="./assets/img/pm25_hindcast_1day_paris_rue_de_belfort.png" alt="Paris PM2.5 Hindcast">
+        </div>
+        <div class="sensor-card">
+            <h3>Birmingham, A4540 Roadside</h3>
+            <img src="./assets/img/pm25_hindcast_1day_birmingham_a4540_roadside.png" alt="Birmingham A4540 PM2.5 Hindcast">
+        </div>
+        <div class="sensor-card">
+            <h3>Birmingham, Ladywood</h3>
+            <img src="./assets/img/pm25_hindcast_1day_birmingham_ladywood.png" alt="Birmingham Ladywood PM2.5 Hindcast">
+        </div>
+        <div class="sensor-card">
+            <h3>Coventry, Allesley</h3>
+            <img src="./assets/img/pm25_hindcast_1day_coventry_allesley.png" alt="Coventry Allesley PM2.5 Hindcast">
+        </div>
+    </div>
+</div>

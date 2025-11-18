@@ -353,9 +353,9 @@ def backfill_predictions_for_monitoring(weather_fg, air_quality_df, monitor_fg, 
     df['days_before_forecast_day'] = 1
     hindcast_df = df[['date', 'predicted_pm25', 'pm25']].copy()
     
-    # Drop pm25 and pm_25 lag columns before inserting to monitor_fg
-    cols_to_drop = ['pm25', 'pm_25_1_day_lag', 'pm_25_2_day_lag', 'pm_25_3_day_lag']
-    df = df.drop(columns=[col for col in cols_to_drop if col in df.columns])
+    # Drop only pm25 before inserting to monitor_fg (keep lagged features)
+    if 'pm25' in df.columns:
+        df = df.drop(columns=['pm25'])
     
     monitor_fg.insert(df, write_options={"wait_for_job": True})
     return hindcast_df
