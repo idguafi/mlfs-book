@@ -3,13 +3,12 @@
 Here's the public dashboard https://idguafi.github.io/mlfs-book/air-quality/
 
 
-========================
 ## NOTE:
 
 You will need an aqicn, and hopsworks api key to be able to run these notebooks. 
 
 See requirements document for required packages. 
-========================
+
 We aimed for an A grade and implemented the various models and pipelines as described in the lab description. For the C-level task, we implemented a model with and without lagged features. We utilised the versioning system in hopsworks for this. For the A-level task, we re-did the entire pipleine in a different branch so that we can show you both branches during the presentation. This required quite a lot of rewrites since everything was hardcoded for a single sensor previously. The system is now robust and can handle both single and multi sensor inference. You can see forecasts and hindcasts in the link. 
 
 Under notebooks/airquality you will find five notebooks, four of which are relevant to the task at hand. 
