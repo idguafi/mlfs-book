@@ -1,14 +1,10 @@
-# mlfs-book
-O'Reilly book - Building Machine Learning Systems with a feature store: batch, real-time, and LLMs
+## Lab description for hand in
 
+Here's the public dashboard https://idguafi.github.io/mlfs-book/air-quality/
 
-## ML System Examples
+We aimed for an A grade and implemented the various models and pipelines as described in the lab description. For the C-level task, we implemented a model with and without lagged features. We utilised the versioning system in hopsworks for this. For the A-level task, we re-did the entire pipleine in a different branch so that we can show you both branches during the presentation. This required quite a lot of rewrites since everything was hardcoded for a single sensor previously. The system is now robust and can handle both single and multi sensor inference. You can see forecasts and hindcasts in the link. 
 
-
-[Dashboards for Example ML Systems](https://featurestorebook.github.io/mlfs-book/)
-
-
-
+Authored by Joel Maharena and Sam Barati
 
 # Run Air Quality Tutorial
 
@@ -46,4 +42,6 @@ ln -s  /tmp/c.app.hopsworks.ai ~/hopsworks
 docker run -p 8080:8080 \
   -v ~/hopsworks:/tmp/c.app.hopsworks.ai \
   --tty --rm -it ghcr.io/feldera/pipeline-manager:latest
+
+
 
